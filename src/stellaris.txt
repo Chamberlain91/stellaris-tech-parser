@@ -1,0 +1,42 @@
+# Example File
+
+@constant1 = 100
+@constant2 = 200
+
+##################
+
+tech_x = {
+	cost = @constant1
+	area = engineering
+	tier = 1
+	category = { industry }
+	prerequisites = { "tech_y" }
+	weight = @constant2
+	
+	feature_flags = {
+		modify_things
+	}
+	
+	modifier = {
+		assign_mystical_value = 1
+	}
+
+	weight_modifier = {			
+		
+		modifier = {
+			factor = 1.25
+			research_leader = {
+				area = engineering
+				has_trait = "leader_trait_expertise_industry"
+			}
+			research_leader = {
+				area = engineering
+				has_trait = "leader_trait_expertise_lasers"
+			}			
+		}
+	}
+	
+	ai_weight = {
+		weight = 10
+	}
+}
