@@ -1,7 +1,7 @@
 // Grammar for Stellaris Tech Files
 
 Object "object"
-  = s:Statement+ {
+  = s:Statement* {
     
     let o = {};
 
@@ -9,8 +9,15 @@ Object "object"
     for(let { op, key, value } of s.filter(x => x != undefined )) {
 
       // Operators
-      if (op == ">") {
-        value = { greaterThan: value };
+      switch(op) {
+        
+        case ">":
+          value = { greaterThan: value };
+          break;
+        
+        case "<":
+          value = { lessThan: value };
+          break;
       }
 
       let isArray = Array.isArray(o[key]);
@@ -40,7 +47,7 @@ Property
   }
 
 Operator
-  = "=" / ">"
+  = "=" / ">" / "<"
 
 Value "value"
   = _ val:( Map / Array / Boolean / String / Number / Identifier ) _ {
@@ -63,6 +70,7 @@ Comment "comment"
 Identifier
   = value: Constant
   / value: Word
+  / value: Number
 
 Constant "constant"
 	= "@" word:Word { return text(); }
@@ -81,14 +89,11 @@ NotQuote
   = !'"' char: . { return char }
 
 Number "number"
-  = [0-9]+ "." [0-9]+ { return parseFloat(text()); }
-  / [0-9]+ { return parseInt(text(), 10); }
+  = "-"? [0-9]+ "." [0-9]+ { return parseFloat(text()); }
+  / "-"? [0-9]+ { return parseInt(text(), 10); }
 
 _ "whitespace"
-  = [ \t\n\r]* { return ' ' }
-
-__ "forced whitespace"
-  = [ \t\n\r]+ { return ' ' }
+  = [ \t\n\r]* { return undefined }
 
 EOS "EOS"
   = EOL
